@@ -1,0 +1,49 @@
+import numpy as np
+import matplotlib.pyplot as plt
+x = 2 * np.random.rand(10,1)
+y = 4 + (2 * x) + np.random.rand(10,1)
+
+# cost funskiyasi
+def costFunction(theta, X, y):
+    m = len(y)
+    # Cost hesaplama
+    cost = (1 / 2 * m) * np.sum(np.square((X.dot(theta)) - y))
+    return cost
+
+
+def gradient_descent_1(X, y, theta, alpha, iterations):
+    m = len(y)
+    # theta ve cost funksiyasindan çıxanlar bir matrise elave olunur
+    thetas = np.zeros((iterations, 2))
+    costs = np.zeros(iterations)
+
+    # Her bir iterasiaya ucun theta hesablanır
+    for i in range(iterations):
+        print(i)
+        theta = theta - (1 / m) * alpha * (X.T.dot((X.dot(theta)) - y))
+        thetas[i, :] = theta.T
+        costs[i] = costFunction(theta, X, y)
+    return theta, thetas, costs
+
+# Learning Rate
+alpha = 0.01
+iterations = 100
+# theta ucun baslangic deyer
+theta = np.random.randn(2, 1)
+
+# Her bir future ucun sabit xeta payı 
+X_bias = np.c_[np.ones((len(x), 1)), x]
+
+
+theta, thetas, costs = gradient_descent_1(X_bias, y, theta, alpha, iterations)
+
+
+print(f"Theta 0 (m) : {theta[0][0]}")
+print(f"Theta 1 : {theta[1][0]}")
+print(f"Cost/MSE(L2 Loss) : {costs[-1]}")
+
+plt.scatter(range(0,100),costs)
+plt.xlabel("iterasiya sayi")
+plt.ylabel("COst/MSE funksiyasinin neticesi")
+plt.box(None)
+plt.show()
